@@ -1,9 +1,16 @@
-FROM openjdk:21-jdk-slim
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY target/chatbot-service-1.0.0.jar app.jar
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
+COPY chatbot_service.py /app/chatbot_service.py
+
+ENV SERVICE_PORT=8085
 EXPOSE 8085
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["uvicorn", "chatbot_service:app", "--host", "0.0.0.0", "--port", "8085"]
