@@ -154,18 +154,20 @@ services:
       timeout: 10s
       retries: 5
 
-  # Chatbot Service
+  # Chatbot Service (Python FastAPI)
   chatbot-service:
     build:
-      context: ./services/chatbot-service
+      context: ../chatbot-service
       dockerfile: Dockerfile
     container_name: pms-chatbot-service
     ports:
       - "8085:8085"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
-      - JWT_SECRET=b2D3dM7qA5N8sXzK1JvB4YtR6LcT9QpFgUwErZnHxVbMsD7PfKgVhWnXcYaTrMzB
+      - EUREKA_APP_NAME=chatbot-service
+      - SERVICE_PORT=8085
+      - API_GATEWAY_URL=http://api-gateway:8080
+      - APPOINTMENT_SERVICE_BASE_URL=http://appointment-service:8083/appointments
     networks:
       - pms-network
     depends_on:
